@@ -24,3 +24,7 @@ def ask(question: str) -> str:
         temperature=0.3
     )
     return resp.choices[0].message.content
+
+if __name__ == "__main__":
+    q = " ".join(sys.argv[1:]) or "Say hello in one sentence."
+    print(ask(q))
