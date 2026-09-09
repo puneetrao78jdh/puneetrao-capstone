@@ -1,65 +1,60 @@
+"""Tiny SQLite persistence — two tables, one writer per table.
+
+Schema:
+  runs    — one row per pipeline execution (mirrors RunSummary fields)
+  answers — one row per LLM call, FK-linked to runs.id
+"""
+from __future__ import annotations
 import sqlite3
+import time
 from pathlib import Path
+from typing import Iterable
 
+from .pipeline import Answer
 from .settings import RunSummary
-from .fake_llm import Answer
 
 
-def init_db(db_path: str | Path = "results.db") -> None:
-    conn = sqlite3.connect(db_path)
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS runs (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    started_at       REAL    NOT NULL,
+    elapsed_seconds  REAL    NOT NULL,
+    n_questions      INTEGER NOT NULL,
+    n_succeeded      INTEGER NOT NULL,
+    n_retries_total  INTEGER NOT NULL,
+    total_cost_usd   REAL    NOT NULL,
+    fail_rate        REAL    NOT NULL,
+    use_fake         INTEGER NOT NULL                       -- 0 / 1 (SQLite has no native bool)
+);
 
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS runs (
-            run_id TEXT PRIMARY KEY,
-            started_at REAL NOT NULL,
-            elapsed_seconds REAL NOT NULL,
-            n_questions INTEGER NOT NULL,
-            n_succeeded INTEGER NOT NULL,
-            n_retries_total INTEGER NOT NULL,
-            total_cost_usd REAL NOT NULL,
-            fail_rate REAL NOT NULL,
-            use_fake INTEGER NOT NULL
-        )
-    """)
+CREATE TABLE IF NOT EXISTS answers (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id    INTEGER NOT NULL,                             -- ties an answer to its run
+    question  TEXT    NOT NULL,
+    answer    TEXT    NOT NULL,
+    cost_usd  REAL    NOT NULL,
+    retries   INTEGER NOT NULL DEFAULT 0,
+    ts        REAL    NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs(id)
+);
+"""
 
-    conn.execute("""
-       CREATE TABLE IF NOT EXISTS answers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            run_id TEXT NOT NULL,
-            question TEXT NOT NULL,
-            answer TEXT NOT NULL,
-            retries INTEGER NOT NULL,
-            cost_usd REAL NOT NULL
-        )
-    """)
 
-    conn.commit()
-    conn.close()
+def connect(path: str | Path = "results.db") -> sqlite3.Connection:
+    """Open (or create) the database, ensure both tables exist, return the connection."""
+    con = sqlite3.connect(path)
+    con.executescript(SCHEMA)
+    con.commit()
+    return con
 
-def save_run(
-    summary: RunSummary,
-    answers: list[Answer],
-    db_path: str | Path = "results.db",
-) -> None:
-    conn = sqlite3.connect(db_path)
 
-    conn.execute(
-        """
-        INSERT INTO runs (
-            run_id,
-            started_at,
-            elapsed_seconds,
-            n_questions,
-            n_succeeded,
-            n_retries_total,
-            total_cost_usd,
-            fail_rate,
-            use_fake
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
+def write_run(con: sqlite3.Connection, summary: RunSummary) -> int:
+    """Insert one row into `runs`. Returns the new row id (use for write_answers)."""
+    cur = con.execute(
+        "INSERT INTO runs (started_at, elapsed_seconds, n_questions, n_succeeded, "
+        "                  n_retries_total, total_cost_usd, fail_rate, use_fake) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (
-            summary.run_id,
             summary.started_at,
             summary.elapsed_seconds,
             summary.n_questions,
@@ -67,51 +62,28 @@ def save_run(
             summary.n_retries_total,
             summary.total_cost_usd,
             summary.fail_rate,
-            int(summary.use_fake),
+            1 if summary.use_fake else 0,
         ),
     )
+    con.commit()
+    return cur.lastrowid
 
-    for a in answers:
-        conn.execute(
-            """
-            INSERT INTO answers (
-                run_id,
-                question,
-                answer,
-                retries,
-                cost_usd
-            )
-            VALUES (?, ?, ?, ?, ?)
-            """,
-            (
-                summary.run_id,
-                a.question,
-                a.text,
-                a.retries,
-                a.cost_usd,
-            ),
-        )
 
-    conn.commit()
-    conn.close()
-
-def load_run(
-    run_id: str,
-    db_path: str | Path = "results.db",
-    ):
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-
-    run = conn.execute(
-        "SELECT * FROM runs WHERE run_id = ?",
-        (run_id,),
-    ).fetchone()
-
-    answers = conn.execute(
-        "SELECT * FROM answers WHERE run_id = ?",
-            (run_id,),
-    ).fetchall()
-
-    conn.close()
-
-    return run, answers
+def write_answers(
+    con: sqlite3.Connection,
+    run_id: int,
+    answers: Iterable[Answer],
+) -> int:
+    """Bulk-insert all answers for a given run. Returns the number of rows inserted."""
+    ts = time.time()
+    rows = [
+        (run_id, a.question, a.text, a.cost_usd, a.retries, ts)
+        for a in answers
+    ]
+    con.executemany(
+        "INSERT INTO answers (run_id, question, answer, cost_usd, retries, ts) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        rows,
+    )
+    con.commit()
+    return len(rows)

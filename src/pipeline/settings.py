@@ -8,7 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from pydantic import BaseModel, Field
-import uuid
+
 
 class Settings(BaseModel):
     """Runtime configuration. Validated at construction."""
@@ -25,12 +25,11 @@ class Settings(BaseModel):
 class RunSummary(BaseModel):
     """One row per pipeline execution. Persisted to the `runs` table."""
 
-    run_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    started_at: float
-    elapsed_seconds: float = Field(ge=0.0)
-    n_questions: int = Field(ge=0)
-    n_succeeded: int = Field(ge=0)
-    n_retries_total: int = Field(ge=0)
-    total_cost_usd: float = Field(ge=0.0)
-    fail_rate: float = Field(ge=0.0, le=1.0)
-    use_fake: bool = True
+    started_at:       float
+    elapsed_seconds:  float = Field(ge=0.0)
+    n_questions:      int   = Field(ge=0)
+    n_succeeded:      int   = Field(ge=0)
+    n_retries_total:  int   = Field(ge=0)
+    total_cost_usd:   float = Field(ge=0.0)
+    fail_rate:        float = Field(ge=0.0, le=1.0)
+    use_fake:         bool
