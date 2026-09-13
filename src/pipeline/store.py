@@ -7,6 +7,7 @@ Schema:
 from __future__ import annotations
 import sqlite3
 import time
+import json
 from pathlib import Path
 from typing import Iterable
 
@@ -39,13 +40,59 @@ CREATE TABLE IF NOT EXISTS answers (
 );
 """
 
+ANSWER_COLUMNS = {
+    "model": "TEXT",
+    "confidence": "REAL",
+    "sources": "TEXT",
+    "schema_version": "TEXT",
+}
+
 
 def connect(path: str | Path = "results.db") -> sqlite3.Connection:
     """Open (or create) the database, ensure both tables exist, return the connection."""
     con = sqlite3.connect(path)
     con.executescript(SCHEMA)
+    columns = {
+        row[1] for row in con.execute("PRAGMA table_info(answers)").fetchall()
+    }
+    for name, column_type in ANSWER_COLUMNS.items():
+        if name not in columns:
+            con.execute(f"ALTER TABLE answers ADD COLUMN {name} {column_type}")
     con.commit()
     return con
+
+
+def save_answer(
+    con: sqlite3.Connection,
+    *,
+    question: str,
+    content: str,
+    retries: int,
+    cost_usd: float,
+    model: str,
+    confidence: float = 1.0,
+    sources: list[str] | None = None,
+    schema_version: str = "v1",
+) -> None:
+    """Persist one API answer without requiring a pipeline run."""
+    con.execute(
+        "INSERT INTO answers "
+        "(run_id, question, answer, cost_usd, retries, ts, model, confidence, "
+        "sources, schema_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            0,
+            question,
+            content,
+            cost_usd,
+            retries,
+            time.time(),
+            model,
+            confidence,
+            json.dumps(sources or []),
+            schema_version,
+        ),
+    )
+    con.commit()
 
 
 def write_run(con: sqlite3.Connection, summary: RunSummary) -> int:

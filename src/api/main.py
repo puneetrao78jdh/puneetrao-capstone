@@ -1,118 +1,75 @@
-"""api/main.py — STARTER for Week 3 Lab Step 1.
+"""FastAPI surface for the question-answering pipeline."""
+from __future__ import annotations
 
-You will complete this file across sub-steps 1b → 1f. Each TODO matches a
-sub-step in the lab guide.
+from pathlib import Path
 
-The completed reference is at <cohort-repo>/week3/reference/api_main_reference.py.
-
-Architecture note: this file holds the *public* W3 API contract — Question
-with field `question`, Answer with fields `content/cost_usd/retries`. These
-are locked in ADR 0002. Internally we delegate to the W2 pipeline's
-`ask_llm`, whose Question has field `text` and whose Answer has field `text`.
-The translation happens inside each endpoint.
-"""
-import asyncio
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-# W2 pipeline — the underlying engine
-from src.pipeline.pipeline import ask_llm as _pipeline_ask_llm
-from src.pipeline.pipeline import Question as _PipelineQuestion
+from src.pipeline.pipeline import (
+    Question as PipelineQuestion,
+    ask_llm,
+    stream_answer,
+)
+from src.pipeline.settings import Settings
+from src.pipeline.store import connect, save_answer
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Public W3 API models — locked in ADR 0002
-# ─────────────────────────────────────────────────────────────────────────────
 class Question(BaseModel):
-    """Public request shape. Field name `question`, not `text`."""
     question: str
 
 
 class Answer(BaseModel):
-    """Public response shape. Field name `content`, not `text`."""
     content: str
     cost_usd: float
     retries: int
+    confidence: float = 1.0
+    sources: list[str] = Field(default_factory=list)
+    schema_version: str = "v1"
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 1b — Replace the placeholder below with a real FastAPI app instance.
-# ─────────────────────────────────────────────────────────────────────────────
-app = FastAPI(
-    title="Capstone API",
-    description="API service for asking questions using the Week 2 LLM pipeline.",
-    version="1.0.0",
-    root_path="/proxy/8000",
-)
+app = FastAPI(title="Capstone API — W4")
+_settings = Settings()
+_db_path = Path(_settings.results_db)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 1c — Add the /ask_batched endpoint (non-streaming reference).
-#
-# Translate W3 Question → W2 _PipelineQuestion(text=q.question), then call
-# _pipeline_ask_llm, then translate the W2 Answer → W3 Answer.
-#
-# Shape:
-@app.post("/ask_batched", response_model=Answer)
-async def ask_batched(q: Question) -> Answer:
-    pipeline_q = _PipelineQuestion(text=q.question)
-    pipeline_ans = await _pipeline_ask_llm(pipeline_q)
-    return Answer(
-        content=pipeline_ans.text,
-        cost_usd=pipeline_ans.cost_usd,
-        retries=pipeline_ans.retries,
-)
-# ─────────────────────────────────────────────────────────────────────────────
-
-# TODO 1c — add /ask_batched here
-@app.post("/ask_batched", response_model=Answer)
-async def ask_batched(q: Question) -> Answer:
-    pipeline_q = _PipelineQuestion(text=q.question)
-    pipeline_ans = await _pipeline_ask_llm(pipeline_q)
-
-    return Answer(
-        content=pipeline_ans.text,
-        cost_usd=pipeline_ans.cost_usd,
-        retries=pipeline_ans.retries,
-    )
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 1d — Add /health.
 @app.get("/health")
-async def helath():
-    return{"status":"ok"}
-# ─────────────────────────────────────────────────────────────────────────────
-
-# TODO 1d — add @app.get("/health") returning {"status": "ok"}
+async def health() -> dict[str, str]:
+    return {"status": "ok"}
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 1f — Add stream_answer + the streaming /ask endpoint.
-#
-# stream_answer(question_text: str) is an async generator that:
-#   - builds _PipelineQuestion(text=question_text)
-#   - awaits _pipeline_ask_llm to get a full pipeline Answer
-#   - yields words from pipeline_ans.text.split(" ") with " " appended
-#   - awaits asyncio.sleep(0.05) between yields
-#
-# The /ask endpoint returns StreamingResponse(stream_answer(q.question), media_type="text/plain").
-# ─────────────────────────────────────────────────────────────────────────────
+@app.post("/ask_batched", response_model=Answer)
+async def ask_batched(q: Question) -> Answer:
+    pipeline_answer = await ask_llm(
+        PipelineQuestion(text=q.question),
+        _settings,
+        fail_rate=_settings.fail_rate,
+    )
+    answer = Answer(
+        content=pipeline_answer.text,
+        cost_usd=pipeline_answer.cost_usd,
+        retries=pipeline_answer.retries,
+    )
+    with connect(_db_path) as conn:
+        save_answer(
+            conn,
+            question=q.question,
+            content=answer.content,
+            retries=answer.retries,
+            cost_usd=answer.cost_usd,
+            model=_settings.model,
+            confidence=answer.confidence,
+            sources=answer.sources,
+            schema_version=answer.schema_version,
+        )
+    return answer
 
-# TODO 1f — add stream_answer + /ask here
-async def stream_answer(question: str):
-    pipeline_q = _PipelineQuestion(text=question)
-
-    pipeline_ans = await _pipeline_ask_llm(pipeline_q)
-
-    for word in pipeline_ans.text.split(" "):
-        yield word + " "
-        await asyncio.sleep(0.1)
 
 @app.post("/ask")
-async def ask(q: Question):
-    return StreamingResponse(
-        stream_answer(q.question),
-        media_type="text/plain"
-    )
+async def ask(q: Question) -> StreamingResponse:
+    async def generate():
+        async for chunk in stream_answer(q.question, _settings):
+            yield chunk
 
+    return StreamingResponse(generate(), media_type="text/plain")

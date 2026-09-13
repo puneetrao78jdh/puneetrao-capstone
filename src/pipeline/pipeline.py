@@ -22,6 +22,7 @@ from pathlib import Path
 
 from .logging_config import get_logger
 from .settings import Settings, RunSummary
+from .cost import compute_cost_usd
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -102,22 +103,73 @@ def load_questions(path: str | Path = "data/questions.csv") -> list[Question]:
 # ─────────────────────────────────────────────────────────────────────────────
 # Core LLM calls
 # ─────────────────────────────────────────────────────────────────────────────
-async def ask_llm(q: Question, fail_rate: float = 0.0) -> Answer:
-    """One LLM call. Branches on Settings.use_fake."""
-    if _settings_for_import.use_fake:
-        ans = await fake_ask_llm(q, fail_rate=fail_rate)
-    else:
-        resp = await _client.chat.completions.create(
-            model=_settings_for_import.model,
-            messages=[{"role": "user", "content": q.text}],
-        )
-        ans = Answer(
-            question=q.text,
-            text=resp.choices[0].message.content,
-            cost_usd=0.0001,                  # real cost-from-usage lands in W25
-        )
+# async def ask_llm(q: Question, fail_rate: float = 0.0) -> Answer:
+#     """One LLM call. Branches on Settings.use_fake."""
+#     if _settings_for_import.use_fake:
+#         ans = await fake_ask_llm(q, fail_rate=fail_rate)
+#     else:
+#         resp = await _client.chat.completions.create(
+#             model=_settings_for_import.model,
+#             messages=[{"role": "user", "content": q.text}],
+#         )
+#         ans = Answer(
+#             question=q.text,
+#             text=resp.choices[0].message.content,
+#             cost_usd=0.0001,                  # real cost-from-usage lands in W25
+#         )
+#     log.info(f"asked: {q.text[:40]}")
+#     return ans
+
+async def ask_llm(
+    q: Question,
+    settings: Settings | None = None,
+    fail_rate: float = 0.0,
+) -> Answer:
+    """Make one fake or real LLM call, depending on the runtime settings."""
+    active_settings = settings or _settings_for_import
+
+    if active_settings.use_fake:
+        return await fake_ask_llm(q, fail_rate=fail_rate)
+
+    resp = await _client.chat.completions.create(
+        model=active_settings.model,
+        messages=[{"role": "user", "content": q.text}],
+        tools=[ANSWER_TOOL],
+        tool_choice={
+            "type": "function",
+            "function": {"name": "answer_question"},
+        },
+    )
+
+    tool_calls = resp.choices[0].message.tool_calls or []
+    if not tool_calls:
+        raise ValueError("No tool call returned from LLM")
+
+    args = json.loads(tool_calls[0].function.arguments)
+    usage = resp.usage
+    cost = compute_cost_usd(
+        active_settings.model,
+        usage.prompt_tokens if usage else 0,
+        usage.completion_tokens if usage else 0,
+    )
+    ans = Answer(
+        question=q.text,
+        text=args["content"],
+        cost_usd=cost,
+    )
     log.info(f"asked: {q.text[:40]}")
     return ans
+
+
+async def stream_answer(
+    question_text: str,
+    settings: Settings | None = None,
+):
+    """Yield an answer as space-delimited text chunks."""
+    question = Question(text=question_text)
+    answer = await ask_llm(question, settings)
+    for word in answer.text.split():
+        yield f"{word} "
 
 
 async def ask_llm_with_retry(
@@ -138,6 +190,7 @@ async def ask_llm_with_retry(
             log.warning(f"retry {attempt + 1} for: {q.text[:40]} ({exc})")
             await asyncio.sleep(2 ** attempt)
     raise RuntimeError("unreachable")          # pragma: no cover
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
