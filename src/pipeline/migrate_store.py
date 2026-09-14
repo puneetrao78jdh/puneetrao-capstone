@@ -31,8 +31,8 @@ def main(argv: list[str]) -> int:
     # Snapshot the columns before, for the user-facing summary.
     before = _columns(db_path) if db_path.exists() else []
 
-    con = connect(db_path)
-    con.close()
+    with connect(db_path):
+        pass
 
     after = _columns(db_path)
     new = [c for c in after if c not in before]
