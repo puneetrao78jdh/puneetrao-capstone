@@ -1,0 +1,335 @@
+{
+  "prompt_v1": "data/prompt-v1.txt",
+  "prompt_v2": "data/prompt-v2.txt",
+  "judge_model": "gpt-4o",
+  "questions_compared": 20,
+  "summary": {
+    "v1": 3,
+    "v2": 9,
+    "tie": 0,
+    "ambiguous": 8
+  },
+  "position_bias_rate": 0.4,
+  "results": [
+    {
+      "golden_id": "g001",
+      "question": "How many Casual Leaves is a confirmed employee entitled to in one financial year?",
+      "ideal_answer": "A confirmed employee is entitled to 4 days of Casual Leave in one financial year, from 1 April to 31 March.",
+      "answer_v1": "A confirmed employee is typically entitled to 12 days of Casual Leave in one financial year. However, this can vary based on the company's specific policy, so it's advisable to check the employee handbook or consult with the HR department for precise details.",
+      "answer_v2": "The number of Casual Leaves an employee is entitled to in a financial year cannot be determined without specific company policy details, as policies can vary significantly between organizations. Generally, companies may provide a certain number of casual leaves each year, but this information should be referenced in the company's employee handbook or HR guidelines.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer incorrectly states that a confirmed employee is typically entitled to 12 days of Casual Leave, which contradicts the ideal answer that specifies 4 days. The second answer correctly refuses to provide a specific number, acknowledging that it depends on company policy, which aligns with the ideal answer's context of needing specific company details. Therefore, the second answer is more accurate and grounded."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly refuses to provide a specific number of Casual Leaves, acknowledging that it depends on the company's policy, which aligns with the ideal answer's context of needing specific information. The second answer incorrectly states a typical entitlement of 12 days, which contradicts the ideal answer's specification of 4 days, making it less accurate."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g002",
+      "question": "How many working days of Paternity Leave is an eligible full-time employee entitled to, and within what period must it be used?",
+      "ideal_answer": "An eligible full-time employee is entitled to 5 working days of Paternity Leave for the birth of the first or second child. The leave can be used over a period of six months.",
+      "answer_v1": "A full-time employee is typically entitled to 10 working days of Paternity Leave. This leave must be used within 12 months following the birth or adoption of a child. It's important to check specific company policies and local labor laws, as these can vary by location and organization.",
+      "answer_v2": "The number of working days of Paternity Leave an eligible full-time employee is entitled to can vary based on company policy and local laws. Typically, it ranges from a few days to several weeks. The leave must usually be used within a specified period following the birth of the child, often within the first few months. For precise figures, please refer to the company's specific policy documentation.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer correctly identifies that the number of working days for Paternity Leave can vary based on company policy and local laws, which aligns with the ideal answer's implication that specific conditions apply. It also mentions that the leave must be used within a specified period following the birth, which is more aligned with the ideal answer's six-month period than the first answer's 12-month period. The first answer incorrectly states a fixed entitlement of 10 working days and a 12-month usage period, which does not match the ideal answer."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly refuses to provide specific details about the number of working days and the period within which the leave must be used, as it acknowledges that these details can vary based on company policy and local laws. This aligns with the ideal answer's context of not having a universal rule. The second answer incorrectly provides specific details (10 working days and 12 months) that do not match the ideal answer, which states 5 working days and a six-month period. Therefore, the first answer is more accurate and grounded."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g003",
+      "question": "Are contractors and consultants eligible for paid leave?",
+      "ideal_answer": "No. Contractors and consultants are not eligible for paid leave benefits. Leave taken by a contractor or consultant is treated as Loss of Pay.",
+      "answer_v1": "Contractors and consultants are generally not eligible for paid leave as they are typically classified as independent workers rather than employees. Paid leave benefits such as sick leave or vacation are usually provided to employees, and eligibility can vary based on the terms of the contract or company policies. Always check specific agreements or local labor laws for detailed information.",
+      "answer_v2": "Eligibility for paid leave for contractors and consultants typically depends on the specific agreements or contracts they have with the company, as well as the policies of the organization. Generally, contractors and consultants are not eligible for the same benefits, such as paid leave, that regular employees receive, but there may be exceptions based on contractual terms. Therefore, the answer cannot be determined without more context about the specific company's policies.",
+      "forward": {
+        "mapped_winner": "v1",
+        "reasoning": "The first answer aligns more closely with the ideal answer by clearly stating that contractors and consultants are generally not eligible for paid leave, which matches the key point in the ideal answer. It also appropriately mentions that eligibility can vary based on contracts or local laws, which is a reasonable addition. The second answer, however, suggests that eligibility depends on specific agreements or company policies, which introduces unnecessary ambiguity and does not align with the ideal answer's clear statement that contractors and consultants are not eligible for paid leave."
+      },
+      "reverse": {
+        "mapped_winner": "v1",
+        "reasoning": "The second answer is more aligned with the ideal answer, clearly stating that contractors and consultants are generally not eligible for paid leave, which matches the ideal answer's statement. It also correctly notes that eligibility can vary based on contract terms or company policies, which is a reasonable addition. The first answer introduces unnecessary ambiguity by suggesting that the answer cannot be determined without more context, which is not supported by the ideal answer."
+      },
+      "result": "v1"
+    },
+    {
+      "golden_id": "g004",
+      "question": "How many weeks of paid maternity leave is an eligible employee entitled to for the birth of her first or second child?",
+      "ideal_answer": "An eligible employee is entitled to up to 26 weeks of paid maternity leave for the birth of her first or second child.",
+      "answer_v1": "An eligible employee is entitled to 12 weeks of paid maternity leave for the birth of her first or second child. This policy applies to most companies adhering to standard family leave policies, including the Family and Medical Leave Act (FMLA).",
+      "answer_v2": "The answer cannot be determined as the duration of paid maternity leave can vary based on the company's policies and applicable laws in different regions. It is advisable to refer to the specific maternity leave policy of the organization or local regulations for accurate information.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer incorrectly states that an eligible employee is entitled to 12 weeks of paid maternity leave, which contradicts the ideal answer of 26 weeks. Additionally, it incorrectly references the Family and Medical Leave Act (FMLA), which does not mandate paid leave. The second answer correctly identifies that the information cannot be determined without specific company policies or local regulations, aligning with the ideal answer's implication that the information is not universally applicable."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly refuses to provide a specific number of weeks, acknowledging that maternity leave policies can vary by company and region. This aligns with the ideal answer's context of needing specific company or regional information. The second answer incorrectly states a specific duration of 12 weeks, which does not match the ideal answer's 26 weeks and introduces unsupported claims about standard policies and FMLA, which do not specify paid leave durations."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g005",
+      "question": "What is the probation period for an employee who joins Matellio with more than two years of prior work experience?",
+      "ideal_answer": "The probation period is 3 months from the employee's date of joining.",
+      "answer_v1": "At Matellio, the probation period for an employee with more than two years of prior work experience is typically 3 months. This duration allows both the employer and the employee to assess the fit and performance before confirming employment.",
+      "answer_v2": "The probation period for an employee joining Matellio with more than two years of prior work experience cannot be determined based on the available information. Company-specific policies on probation periods can vary and should be confirmed with human resources or the company's employee handbook.",
+      "forward": {
+        "mapped_winner": "v1",
+        "reasoning": "The first answer correctly states that the probation period is 3 months, which matches the ideal answer. The second answer incorrectly claims that the probation period cannot be determined, which contradicts the ideal answer. Therefore, the first answer is more accurate and complete."
+      },
+      "reverse": {
+        "mapped_winner": "v1",
+        "reasoning": "The second answer correctly states that the probation period is 3 months, which matches the ideal answer. The first answer incorrectly claims that the probation period cannot be determined, which is inaccurate according to the ideal answer. Therefore, the second answer is more accurate and complete."
+      },
+      "result": "v1"
+    },
+    {
+      "golden_id": "g006",
+      "question": "What are the standard office working hours and weekly off days?",
+      "ideal_answer": "The standard office working hours are 9:30 am to 7:00 pm. The flexible reporting time is from 9:30 am to 10:00 am, and the lunch break is from 2:00 pm to 2:30 pm. Saturday and Sunday are weekly off days.",
+      "answer_v1": "Standard office working hours typically range from 8:00 AM to 5:00 PM, Monday to Friday, amounting to about 40 hours per week. Most organizations provide two days off per week, commonly Saturday and Sunday, although this can vary by company or industry, with some offering different schedules such as a four-day work week or alternate days off.",
+      "answer_v2": "Standard office working hours typically range from 9 AM to 5 PM, Monday through Friday. Common weekly off days are Saturday and Sunday. However, these can vary between companies and industries, so it may differ in specific organizations.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer is closer to the ideal answer in terms of the weekly off days, correctly identifying Saturday and Sunday as common off days. The first answer introduces unnecessary variability and alternative schedules that are not mentioned in the ideal answer, making it less accurate. Both answers fail to match the specific working hours and flexible reporting time mentioned in the ideal answer, but the second answer is more aligned with the common understanding of a workweek."
+      },
+      "reverse": {
+        "mapped_winner": "tie",
+        "reasoning": "Both answers provide general information about standard office working hours and weekly off days, but neither matches the specific details given in the ideal answer. The first answer mentions 9 AM to 5 PM, while the second mentions 8 AM to 5 PM, both differing from the ideal answer's 9:30 AM to 7:00 PM. Both answers correctly identify Saturday and Sunday as common off days but fail to mention the flexible reporting time and lunch break specified in the ideal answer. Therefore, neither answer is meaningfully better than the other."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g007",
+      "question": "Can final project documents be stored permanently in Microsoft OneDrive?",
+      "ideal_answer": "No. OneDrive must not be used as the permanent repository for team or project files. Finalised project documents must be moved to the designated Microsoft SharePoint Team Site.",
+      "answer_v1": "Yes, final project documents can be stored permanently in Microsoft OneDrive. OneDrive offers cloud storage solutions where users can save files with the ability to access them anytime and from any device. However, it's important to keep your account active and within the storage limits to retain access to your files without any interruptions.",
+      "answer_v2": "Yes, final project documents can be stored permanently in Microsoft OneDrive as long as your OneDrive account remains active and there is sufficient storage space. However, it's important to note that if your organization has specific retention policies, you should ensure compliance with those policies regarding document storage and retention.",
+      "forward": {
+        "mapped_winner": "v1",
+        "reasoning": "The first answer correctly states that OneDrive should not be used as the permanent repository for final project documents, aligning with the ideal answer. The second answer incorrectly suggests that documents can be stored permanently in OneDrive, which contradicts the ideal answer's instruction to use SharePoint for permanent storage. Both answers mention account activity and storage limits, but the first answer is more aligned with the ideal answer's emphasis on not using OneDrive for permanent storage."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer acknowledges the possibility of storing documents in OneDrive but also mentions the importance of complying with organizational retention policies, which aligns with the ideal answer's emphasis on not using OneDrive as a permanent repository. The second answer fails to mention any organizational policies or the need to move documents to SharePoint, which is a critical aspect of the ideal answer."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g008",
+      "question": "How often must passwords be changed for applications that are not integrated with Single Sign-On?",
+      "ideal_answer": "Passwords for applications that are not integrated with Single Sign-On must be changed every 90 days.",
+      "answer_v1": "For applications not integrated with Single Sign-On, it is recommended that passwords be changed every 60 to 90 days, depending on the organization's security policy. Additionally, users should be encouraged to change their passwords immediately if there are indications of a security breach or if a password is suspected to be compromised.",
+      "answer_v2": "The frequency with which passwords must be changed for applications not integrated with Single Sign-On can vary by company policy. However, many security frameworks recommend changing passwords at least every 60 to 90 days. For the precise policy applied within your organization, please consult your internal security policies or IT department.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The ideal answer specifies that passwords must be changed every 90 days for applications not integrated with Single Sign-On. The second answer aligns more closely with this by stating that many security frameworks recommend changing passwords every 60 to 90 days, which includes the 90-day requirement. The first answer introduces an unsupported recommendation of changing passwords every 60 to 90 days based on the organization's security policy, which deviates from the ideal answer's specific 90-day requirement. Therefore, the second answer is more accurate and grounded."
+      },
+      "reverse": {
+        "mapped_winner": "tie",
+        "reasoning": "Both answers provide a range of 60 to 90 days for changing passwords, which partially aligns with the ideal answer of 90 days. However, neither answer specifies the exact 90-day requirement as stated in the ideal answer. Both answers also mention that the frequency can depend on the organization's security policy, which is not mentioned in the ideal answer. Therefore, neither answer is meaningfully better than the other in terms of accuracy and completeness."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g009",
+      "question": "How many Sick Leaves can an employee use during probation?",
+      "ideal_answer": "An employee on probation is entitled to 2 days of Sick Leave.",
+      "answer_v1": "The number of sick leaves an employee can use during probation varies by company policy and local labor laws. Commonly, companies may offer a limited number of sick days, typically ranging from 3 to 5 days during the probation period. It's essential to check the specific employee handbook or consult HR for the exact policy in your organization.",
+      "answer_v2": "The number of sick leaves an employee can use during probation is typically defined by the company's specific leave policy. This can vary significantly from one organization to another. Therefore, without specific company guidelines, the answer cannot be determined.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The ideal answer specifies that an employee on probation is entitled to 2 days of Sick Leave. The first answer provides a range of 3 to 5 days, which is incorrect according to the ideal answer. The second answer correctly states that the number of sick leaves is defined by the company's specific leave policy and does not provide an incorrect range, making it more accurate and grounded."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The ideal answer specifies that an employee on probation is entitled to 2 days of Sick Leave. The first answer correctly states that the number of sick leaves is defined by company policy and does not provide an incorrect or unsupported number. The second answer, however, provides a range of 3 to 5 days, which is not supported by the ideal answer and introduces potentially incorrect information. Therefore, the first answer is more accurate and grounded."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g010",
+      "question": "What happens if an employee's Casual Leave extends beyond two consecutive days?",
+      "ideal_answer": "If Casual Leave extends beyond two consecutive days, all those leave days, including the first two days, are treated as Loss of Pay.",
+      "answer_v1": "If an employee's casual leave extends beyond two consecutive days, it may require formal approval from the management, depending on the organization's leave policy. Typically, this could involve transitioning to a different type of leave, such as sick leave or unpaid leave, and the employee may need to provide documentation or a valid reason for the extended absence.",
+      "answer_v2": "If an employee's Casual Leave extends beyond two consecutive days, they may be required to provide additional documentation or a formal request for an extended leave. Company policy typically dictates that any leave beyond this period may need to be reclassified as Medical Leave or another type of leave, subject to approval. Specific policies should be consulted for details on procedures and implications for employee attendance and pay.",
+      "forward": {
+        "mapped_winner": "tie",
+        "reasoning": "Both answers provide similar information about the potential need for additional documentation or formal approval if Casual Leave extends beyond two days. However, neither answer accurately reflects the ideal answer, which states that all leave days are treated as Loss of Pay if Casual Leave extends beyond two days. Both answers introduce unsupported company rules and do not match the ideal answer's key point. Therefore, neither answer is meaningfully better than the other."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer is more accurate as it addresses the potential reclassification of leave and the need for additional documentation or formal requests, which aligns with the ideal answer's implication that extended leave is treated differently. The second answer is less specific and does not mention the treatment of leave as Loss of Pay, which is a critical aspect of the ideal answer."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g011",
+      "question": "How many days of unused Earned Leave can a regular employee carry forward into the next leave year?",
+      "ideal_answer": "A regular employee can carry forward a maximum of 8 days of unused Earned Leave into the next leave year. Any balance above this limit lapses if it is not used.",
+      "answer_v1": "In most organizations, regular employees can typically carry forward a maximum of 30 days of unused Earned Leave into the next leave year. However, this can vary based on specific company policies and local labor laws, so it's advisable to consult the employee handbook or HR department for exact details.",
+      "answer_v2": "The number of unused Earned Leave days that a regular employee can carry forward into the next leave year cannot be determined without specific company policy information. Each organization may have its own regulations regarding leave accrual and carryover limits.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer correctly identifies that the number of unused Earned Leave days that can be carried forward depends on specific company policies, which aligns with the ideal answer's indication of a specific limit (8 days) that is not universally applicable. The first answer incorrectly provides a general rule of 30 days, which is not supported by the ideal answer and could mislead the reader."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly refuses to provide a specific number of days for carrying forward unused Earned Leave, aligning with the ideal answer's indication that this information is not universally applicable and depends on specific company policies. The second answer incorrectly provides a specific number (30 days) which is not supported by the ideal answer and could mislead the reader."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g012",
+      "question": "Can a Professional carry forward unused Earned Leave into the next leave year?",
+      "ideal_answer": "No. A Professional cannot carry forward unused Earned Leave. Unused Earned Leave is not carried forward or encashed for Professionals.",
+      "answer_v1": "Whether a Professional can carry forward unused Earned Leave into the next leave year typically depends on the company's leave policy and applicable labor laws. Many organizations allow a certain number of unused Earned Leave days to be carried forward, while others may have a \"use-it-or-lose-it\" policy or require leave to be used within a specific timeframe. It's advisable to consult the employee handbook or HR for specific guidelines applicable to your organization.",
+      "answer_v2": "Whether a Professional can carry forward unused Earned Leave into the next leave year typically depends on the specific company's leave policy and applicable labor laws. It is essential to consult the company's internal policy documents or HR department to determine the rules governing leave carryover.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The ideal answer clearly states that a Professional cannot carry forward unused Earned Leave. The second answer correctly reflects the need to consult company policy but does not contradict the ideal answer by suggesting that carry forward is possible. The first answer, however, implies that carry forward might be allowed depending on company policy, which contradicts the ideal answer. Therefore, the second answer is more aligned with the ideal answer."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The ideal answer clearly states that a Professional cannot carry forward unused Earned Leave. The first answer, while not directly stating this, suggests consulting company policy, which is a reasonable approach given the lack of explicit information. The second answer, however, introduces the possibility of carrying forward leave, which contradicts the ideal answer. Therefore, the first answer is more aligned with the ideal answer."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g013",
+      "question": "Can an employee share a OneDrive file externally using an anonymous link?",
+      "ideal_answer": "No. Creating or using an anonymous OneDrive sharing link for external sharing is prohibited.",
+      "answer_v1": "Yes, an employee can share a OneDrive file externally using an anonymous link if their organization allows it. This feature enables users to create links that do not require the recipient to sign in or have a Microsoft account to access the shared file or folder. However, the ability to share files this way may be restricted by the organization's sharing policies.",
+      "answer_v2": "Whether an employee can share a OneDrive file externally using an anonymous link depends on the organization's specific policy settings regarding OneDrive sharing. Some companies may allow sharing files with anonymous links to facilitate collaboration, while others may have stricter controls and disallow this option for security reasons. To determine the precise capabilities in your organization, you would need to consult your IT department or specific company policies on OneDrive usage.",
+      "forward": {
+        "mapped_winner": "v1",
+        "reasoning": "The first answer provides a clear and direct response that aligns with the ideal answer by stating that sharing via anonymous links is possible if the organization allows it, but it may be restricted by the organization's policies. The second answer, while also mentioning organizational policies, does not clearly state the prohibition of anonymous links as the ideal answer does. The first answer is more accurate in reflecting the possibility of sharing with restrictions, which is a more complete and grounded response given the context of organizational policies."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly identifies that the ability to share OneDrive files externally using an anonymous link depends on the organization's policy settings. It does not make any unsupported claims about the default ability to share anonymously, which aligns with the ideal answer that prohibits such sharing. The second answer incorrectly states that sharing is possible if allowed by the organization, which contradicts the ideal answer's prohibition of anonymous sharing."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g014",
+      "question": "When must a permanent remote employee use the company VPN?",
+      "ideal_answer": "A permanent remote employee must use the company VPN at all times during working hours and must not use it outside working hours.",
+      "answer_v1": "A permanent remote employee must use the company VPN whenever accessing company resources, such as internal systems or sensitive data, to ensure secure connections and protect against unauthorized access. Additionally, the VPN should be used when connected to public networks or unsecured Wi-Fi to safeguard the employee's data and the company's information.",
+      "answer_v2": "A permanent remote employee must use the company VPN anytime they are accessing company resources, sensitive data, or systems that are not on the public internet. This generally includes making connections to company servers, databases, and internal applications to ensure secure data transmission and compliance with security policies. Specific circumstances or additional details may vary by company policy, which should be referred to for precise guidelines.",
+      "forward": {
+        "mapped_winner": "tie",
+        "reasoning": "Both answers provide similar information about when a permanent remote employee should use the company VPN, focusing on accessing company resources, sensitive data, and ensuring secure connections. Neither answer matches the ideal answer's specific requirement of using the VPN at all times during working hours and not outside working hours. Both answers introduce conditions not mentioned in the ideal answer, such as using the VPN on public networks or referring to company policy for precise guidelines. Therefore, neither answer is meaningfully better than the other."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer is more aligned with the ideal answer as it emphasizes the use of the VPN during working hours when accessing company resources, sensitive data, or systems. It also acknowledges that specific circumstances may vary by company policy, which is a reasonable caveat. The second answer, while also focusing on security, introduces the use of VPN on public networks or unsecured Wi-Fi, which is not mentioned in the ideal answer and could be considered an unsupported addition."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g015",
+      "question": "An employee with three years of prior work experience joins Matellio. What is the probation period, and which of these leave types can be used during probation: Casual Leave, Sick Leave, Earned Leave and Occasional Leave?",
+      "ideal_answer": "The probation period is 3 months from the date of joining. During probation, the employee may use 2 days of Casual Leave and 2 days of Sick Leave. Earned Leave cannot be used during probation, although it continues to accumulate and becomes available after successful completion of probation. Occasional Leave is not available during probation.",
+      "answer_v1": "At Matellio, the probation period for new employees is typically six months. During this probation period, employees are generally entitled to Casual Leave and Sick Leave, while Earned Leave usually accrues only after successful completion of probation. Occasional Leave may or may not be applicable based on internal policy, so it would be best to consult the HR department for specifics.",
+      "answer_v2": "The probation period for new employees at Matellio is generally six months. During this probation period, employees can typically use Casual Leave and Sick Leave, but Earned Leave and Occasional Leave may not be available until after the probation is completed. For specific policies regarding leave types, it\u2019s best to consult the employee handbook or HR department directly.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer is more accurate and grounded compared to the first answer. Both answers incorrectly state the probation period as six months instead of the correct three months. However, the second answer correctly states that Earned Leave and Occasional Leave may not be available during probation, aligning more closely with the ideal answer. The first answer introduces uncertainty about Occasional Leave that is not supported by the ideal answer, which clearly states it is not available during probation. Therefore, the second answer is slightly better."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer is more accurate and complete compared to the ideal answer. It correctly identifies that Casual Leave and Sick Leave can be used during probation, while Earned Leave and Occasional Leave are not available. Although it incorrectly states the probation period as six months instead of three, it provides a more comprehensive explanation of the leave policies during probation. The second answer also incorrectly states the probation period as six months and is less clear about the availability of Occasional Leave, making the first answer the better choice overall."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g016",
+      "question": "An employee approved for hybrid working wants to save confidential company documents on a personal laptop while working from home. Is this permitted, where should the documents be stored, and can the personal laptop be used to access confidential information?",
+      "ideal_answer": "No. Company information must not be stored on personal devices. Company documents must be stored in approved company storage such as Microsoft OneDrive, Microsoft Teams or Microsoft SharePoint. Confidential and Restricted information may be accessed only from IT-approved and registered devices. A personal laptop must not be used to access Confidential or Restricted information.",
+      "answer_v1": "Employees are generally not permitted to save confidential company documents on personal devices due to security risks. Instead, such documents should be stored on secure company platforms or cloud services designated for that purpose, which comply with company policies. Accessing confidential information from a personal laptop may also violate security protocols unless such access is explicitly authorized and secured with appropriate safeguards like VPNs and encryption.",
+      "answer_v2": "Storing confidential company documents on a personal laptop is generally not permitted due to security and data protection policies. Employees should use company-approved devices and secure storage solutions when accessing or storing sensitive information. Accessing confidential information from a personal laptop can also violate company policies, which typically require the use of secure, company-issued devices to maintain data integrity and security.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer is more aligned with the ideal answer. It clearly states that storing confidential documents on a personal laptop is not permitted and emphasizes the use of company-approved devices and secure storage solutions. It also mentions that accessing confidential information from a personal laptop can violate company policies, which is consistent with the ideal answer's emphasis on using IT-approved and registered devices. The first answer introduces unsupported conditions like the use of VPNs and encryption, which are not mentioned in the ideal answer, making it less accurate."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer aligns more closely with the ideal answer by clearly stating that storing confidential company documents on a personal laptop is not permitted and emphasizing the need for company-approved devices and secure storage solutions. It also correctly notes that accessing confidential information from a personal laptop can violate company policies. The second answer introduces unsupported conditions, such as the possibility of accessing confidential information from a personal laptop if authorized and secured with VPNs and encryption, which is not mentioned in the ideal answer. Therefore, the first answer is more accurate and grounded."
+      },
+      "result": "v2"
+    },
+    {
+      "golden_id": "g017",
+      "question": "An employee resigns and starts serving the notice period. Which leave types can the employee use during the notice period, and what happens to any unused Compensatory Off balance?",
+      "ideal_answer": "During the notice period, the employee may apply for Earned Leave in a medical or personal emergency, subject to the required approval. Casual Leave and Sick Leave cannot be used during the notice period. Compensatory Off cannot be used during the notice period, and any unused Compensatory Off balance lapses at the start of the notice period. It cannot be carried forward or encashed.",
+      "answer_v1": "During the notice period, an employee can typically use their accrued annual leave or vacation leave, subject to the employer's policy on leave during notice periods. Sick leave may also be used if applicable. Regarding unused Compensatory Off (Comp Off) balance, policies vary by company; generally, unused Comp Off may either lapse or be paid out, depending on the organization's specific leave policies and any applicable labor laws.",
+      "answer_v2": "During the notice period, the employee may be able to use vacation leave or other paid leaves as per the company's leave policy. However, specific rules about using leave types during the notice period can vary by organization, so it is advisable to consult the HR policies or the employee handbook for precise details. As for unused Compensatory Off balance, it typically depends on the company's policy regarding compensation or payout for such leave; this information should also be verified with HR.",
+      "forward": {
+        "mapped_winner": "tie",
+        "reasoning": "Both answers fail to accurately reflect the ideal answer. The first answer incorrectly suggests that sick leave may be used during the notice period and that compensatory off may be paid out, which contradicts the ideal answer. The second answer also fails to specify the restrictions on leave types during the notice period and suggests checking company policy, which is not aligned with the ideal answer's specific rules. Both answers lack the specificity and accuracy required, leading to a tie."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly identifies that the use of leave during the notice period is subject to company policy and advises consulting HR, which aligns with the ideal answer's emphasis on specific conditions for leave usage. It also correctly notes that the handling of unused Compensatory Off balance depends on company policy, which is a reasonable interpretation given the ideal answer's specific rule that it lapses. The second answer incorrectly suggests that sick leave may be used during the notice period, which contradicts the ideal answer. Therefore, the first answer is more accurate and grounded."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g018",
+      "question": "A permanent remote employee loses a company-issued laptop containing confidential company information. Whom should the employee inform, what action should IT take, and can the company recover the laptop cost from the employee?",
+      "ideal_answer": "The employee must report the lost device immediately to the IT Department so that remote wiping or access revocation can begin. Because the device contains confidential information, the incident must also be reported immediately to the Chief Operating Officer and the Head of Services Delivery. IT should assess the incident and revoke access where required. The company may recover the laptop cost from the employee where the loss resulted from negligence, misuse or accident, based on management's decision.",
+      "answer_v1": "The employee should immediately inform their direct supervisor and the IT department about the lost laptop. IT should then initiate security protocols that may include remote data wiping to protect confidential information and assess the situation for potential data breaches. Regarding the recovery of the laptop cost, it typically depends on company policy; if the loss was due to negligence, the company may seek reimbursement, but this should be outlined in the company's equipment policy.",
+      "answer_v2": "The employee should immediately inform their direct supervisor and the IT department about the lost laptop. IT will likely initiate a data breach protocol, which may include suspending access to company systems, tracking the device if it's equipped with tracking software, and assessing any data breach risk. Whether the company can recover the laptop cost from the employee depends on the company's specific policy regarding negligence and equipment loss, which cannot be determined without further information.",
+      "forward": {
+        "mapped_winner": "v1",
+        "reasoning": "The first answer is more aligned with the ideal answer. It correctly identifies that the employee should inform the IT department and mentions the possibility of remote data wiping, which is a key action IT should take. It also accurately reflects the condition under which the company may recover the laptop cost, mentioning negligence as a factor, similar to the ideal answer. The second answer, while mentioning tracking and suspending access, does not emphasize remote wiping or access revocation as clearly as the first answer. Additionally, the first answer's mention of company policy aligns with the ideal answer's mention of management's decision, making it more complete and grounded."
+      },
+      "reverse": {
+        "mapped_winner": "v1",
+        "reasoning": "The second answer is more accurate and complete. It correctly identifies that the employee should inform the IT department and mentions the possibility of remote data wiping, which aligns with the ideal answer's emphasis on remote wiping or access revocation. It also correctly notes that the recovery of the laptop cost depends on company policy and negligence, similar to the ideal answer. The first answer, while mentioning data breach protocols, does not specifically address remote wiping or access revocation and is less clear about the conditions under which the company may recover costs."
+      },
+      "result": "v1"
+    },
+    {
+      "golden_id": "g019",
+      "question": "What is Matellio's annual budget for employee benefits and IT security, and how is it divided between departments?",
+      "ideal_answer": "The selected policy corpus does not contain information about Matellio's annual budget for employee benefits or IT security, or how such budgets are divided between departments. This question cannot be answered from the available policy documents.",
+      "answer_v1": "Unfortunately, I don't have access to specific financial data regarding Matellio's annual budget for employee benefits and IT security, nor how it is divided among departments. For such specific information, I recommend consulting company reports or reaching out directly to Matellio's finance department.",
+      "answer_v2": "The annual budget for employee benefits and IT security at Matellio cannot be determined with the information available. Specific budget allocations for these areas and their distribution among departments are typically confidential and may not be publicly available.",
+      "forward": {
+        "mapped_winner": "v1",
+        "reasoning": "The first answer correctly refuses the question by stating the lack of access to specific financial data and suggests consulting company reports or the finance department for such information. This aligns with the ideal answer's indication that the information is not available in the policy corpus. The second answer also correctly refuses the question but adds an unsupported claim about confidentiality, which is not mentioned in the ideal answer. Therefore, the first answer is more accurate and grounded."
+      },
+      "reverse": {
+        "mapped_winner": "tie",
+        "reasoning": "Both answers correctly identify that the information about Matellio's annual budget for employee benefits and IT security, and its division between departments, is not available. The first answer mentions that such information is typically confidential, while the second suggests consulting company reports or contacting the finance department for more details. Both answers are accurate, complete, and grounded in the absence of the required information, making neither answer meaningfully better than the other."
+      },
+      "result": "ambiguous"
+    },
+    {
+      "golden_id": "g020",
+      "question": "What percentage salary increase will an employee receive after successfully completing probation?",
+      "ideal_answer": "The selected policy corpus explains the probation and confirmation process, but it does not state that an employee will receive a salary increase after probation or specify any percentage. This question cannot be answered from the available policy documents. The employee should contact HR for compensation-related information.",
+      "answer_v1": "The percentage salary increase an employee receives after successfully completing probation can vary significantly by organization, industry, and role. Typically, this increase ranges from 3% to 10%, but some companies may offer higher increases based on performance or company policy.",
+      "answer_v2": "The percentage salary increase an employee receives after completing probation cannot be determined without specific company policies. Different companies may have varying standards or practices regarding salary adjustments following the probation period.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer correctly states that the percentage salary increase cannot be determined without specific company policies, aligning with the ideal answer that the information is not available in the policy documents. The first answer provides a range of percentages, which is unsupported and not grounded in the provided policy corpus, making it less accurate."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly states that the percentage salary increase after probation cannot be determined without specific company policies, aligning with the ideal answer that the policy corpus does not specify any percentage increase. The second answer provides a range of 3% to 10%, which is unsupported by the ideal answer and introduces invented information. Therefore, the first answer is more accurate and grounded."
+      },
+      "result": "v2"
+    }
+  ]
+}

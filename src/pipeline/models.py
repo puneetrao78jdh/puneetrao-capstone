@@ -8,9 +8,10 @@ from pydantic import BaseModel, Field
 
 
 class Question(BaseModel):
-    """Unchanged from W3."""
-    question: str = Field(..., min_length=1)
+    """Question sent to the answer pipeline."""
 
+    question: str = Field(..., min_length=1)
+    system_prompt: str | None = None
 
 class Answer(BaseModel):
     """W4 Answer — same W3 fields plus three new optional fields.

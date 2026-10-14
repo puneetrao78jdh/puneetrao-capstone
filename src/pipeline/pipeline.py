@@ -76,12 +76,29 @@ async def ask_llm(q: Question, settings: Settings | None = None) -> Answer:
 
     client = AsyncOpenAI(api_key=settings.openai_api_key)
     last_err: Exception | None = None
+  
+    messages = []
+
+    if q.system_prompt:
+        messages.append(
+            {
+                "role": "system",
+                "content": q.system_prompt,
+            }
+        )
+
+    messages.append(
+        {
+            "role": "user",
+            "content": q.question,
+        }
+    )
 
     for attempt in range(settings.max_retries + 1):
         try:
             resp = await client.chat.completions.create(
                 model=settings.model,
-                messages=[{"role": "user", "content": q.question}],
+                messages=messages,
                 tools=[ANSWER_TOOL],
                 tool_choice={
                     "type": "function",
