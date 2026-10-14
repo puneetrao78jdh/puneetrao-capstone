@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     openai_api_key: str = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
     questions_csv: Path  = Path("data/questions.csv")
     results_json:  Path  = Path("results.json")
-    results_db:    Path  = Path("results.db")
+    results_db:    Path  = Path("data/answers.db")
     batch_size:    int   = Field(5,   gt=0, le=20)
     fail_rate:     float = Field(0.0, ge=0.0, le=1.0)
     max_retries: int = Field(2, ge=0)

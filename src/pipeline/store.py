@@ -26,6 +26,22 @@ CREATE TABLE IF NOT EXISTS answers (
     cost_usd        REAL DEFAULT 0.0,
     created_at      TEXT DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS eval_runs (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    golden_id         TEXT NOT NULL,
+    question          TEXT NOT NULL,
+    candidate_answer  TEXT NOT NULL,
+    ideal_answer      TEXT NOT NULL,
+    candidate_model   TEXT NOT NULL,
+    judge_model       TEXT NOT NULL,
+    accuracy          INTEGER NOT NULL,
+    groundedness      INTEGER NOT NULL,
+    format            INTEGER NOT NULL,
+    reasoning         TEXT NOT NULL,
+    eval_run_label    TEXT DEFAULT 'eval-run-001',
+    created_at        TEXT DEFAULT CURRENT_TIMESTAMP
+);
 """
 
 # Columns added in W4. Each entry: (column_name, column_def).

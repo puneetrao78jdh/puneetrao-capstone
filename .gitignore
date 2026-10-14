@@ -1,4 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
 .env
+
+# Database
 *.db
+
+# Logs
 logs/
+
+# Results
 results.json
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Virtual Environment
+.venv/
+venv/
