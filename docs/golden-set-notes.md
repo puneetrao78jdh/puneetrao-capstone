@@ -108,7 +108,7 @@ The verification process is:
 
 The current JSON structure and category counts have been prepared, but a valid file structure does not prove that every reference answer is correct.
 
-Final source verification status: **Pending completion before eval-run-001.**
+Final source verification status: **Complete. All 20 entries were checked against the full 18-document corpus. Entries g002 and g004 were reworded to remove wording not stated directly in the source policies. Entry g018 was expanded to include all required reporting contacts. The two edge questions were checked across the complete corpus, and the requested budget and post-probation salary-increase information was not found.**
 
 ---
 
