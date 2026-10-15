@@ -1,117 +1,113 @@
-# ADR-0002: API Contract
+# ADR 0002: API Contract
 
-- **Status:** Draft
-- **Date:** 2026-09-09
+- **Status:** W4 contract retained; W5 scope updated
+- **Updated:** 2026-10-10
 - **Author:** Puneet Rao
-
-## Usecase
-Enterprise knowlege assistant for GitLab Handbook. This capstone will build a grounded Q&A assistant over a selected set of public GitLab Handbook policies so that users can ask natural-language questions and receive concise answers based on the source documents rather than relying only on the LLM’s general knowledge.
 
 ## Context
 
-Week 3 introduces a FastAPI layer in front of the existing pipeline so external clients can call the application over HTTP. We will be try to use this form 8000 port and also streamlit 8501 port
+The Matellio Employee Policy & Support Assistant will answer questions using
+18 HR, workplace, and IT policy documents. We keep the working API contract
+while adding corpus-based answering and evaluation behind it.
 
-## Decision
+The prepared W5 folder described a single JSON `/ask` endpoint, but its API
+returns a dummy answer. That contract does not replace the working application.
 
-The application will expose a small, stable API surface for asking questions and checking service health.
+## Current endpoints
 
-### Endpoints
+| Method and path | Current response |
+|---|---|
+| `GET /health` | HTTP 200 with `{"status": "ok"}` |
+| `POST /ask` | Streaming `text/plain` answer |
+| `POST /ask_batched` | JSON `Answer` with the six fields below |
 
-- `GET /health` - to check server is working and is in good health
-- `POST /ask` - return streaming answer
-- `POST /ask_batched` - return entire answer in one batch without streaming
+`/health` confirms the endpoint is running. It does not check model access,
+database readiness, or answer quality. `/ask_batched` accepts one question,
+returns the complete answer, and saves it to the configured SQLite database.
+The current `/ask` path streams text without saving an answer row.
 
-### Request contract
+## Request
 
-Question requests use this JSON shape:
+Both question endpoints accept:
 
 ```json
 {
-  "question": "What is RAG?"
+  "question": "How many Casual Leaves is a confirmed employee entitled to?"
 }
 ```
 
-- GET/health - will retrun {"status": "ok"}
-- POST /ask_batched - complete answer + cost_usd + retries
-- POST /ask - stream answer text peace by peace
+The `question` field is required and must be a string of at least one character.
+Missing or invalid requests are rejected with HTTP 422. Whitespace-only text
+is not explicitly rejected by the current model.
 
-## Validation
+There is no implemented request field for a system-prompt override, uploaded
+file, conversation history, or schema-version selection. Pairwise evaluation
+must explicitly arrange for each prompt to reach the generation code.
 
-The API uses Pydantic to validate incoming requests. A valid request must contain a question field as a string. If required data is missing or invalid, FastAPI rejects the request with HTTP 422 before it reaches the LLM.
+## JSON response from `/ask_batched`
 
-## Consequences
-- Other applications can now use our AI pipeline through the API without knowing our internal Python code.
-- We need to keep the API contract stable because changing endpoint names or request/response formats may break applications using it.
-- Streaming gives users a better experience, but it also makes handling connections and errors more complex.
+| Field | Type | Meaning |
+|---|---|---|
+| `content` | string | Generated answer |
+| `cost_usd` | number | Calculated model-call cost in USD, based on token usage and configured rates |
+| `retries` | integer | Retry count reported by the pipeline |
+| `confidence` | number, 0 to 1 | Model-reported confidence; not a verified probability of correctness |
+| `sources` | list of strings | Source identifiers returned by the pipeline |
+| `schema_version` | string | Current response version, `v1` |
 
-## Tests
-- Test that /health returns 200 and {"status": "ok"}.
-- Test that /ask rejects requests without a valid question.
-- Test that ask_llm() calls the expected LLM function correctly.
-- Test that retry logic makes 3 attempts before finally raising an error.
+The streaming `/ask` response does not contain this JSON envelope.
+Sources are not yet verified corpus citations: the generation code currently
+receives the question without the Matellio policy documents. Grounding and
+citation checks are planned work, not guarantees of the current API.
 
-### Schema versioning rule (added W4)
+## Persistence and model settings
 
-Every `Answer` carries a `schema_version` field.
+The API reads `Settings.results_db`, now defaulting to `data/answers.db`.
+An environment setting can override this path. The model-comparison script
+also defaults to `data/answers.db`. Keep these aligned with the W4 store schema;
+the older `results.db` has a different table layout.
 
-**Today's shape is `v1`.** It stays `v1` through any additive change:
-new optional fields with defaults, new endpoints at different paths,
-internal model swaps, prompt edits that don't change the output shape,
-retry / logging / observability changes.
+The default candidate model is `gpt-4o-mini`. Other supported models can be
+selected through configuration. Automatic switching to `gpt-4o` based on
+confidence is not implemented.
 
-**Breaking changes ship as a new `schema_version`** (`v2`, `v3`, …):
-removing a required field, renaming a public field, changing a field's
-type, making an optional field required, semantic changes (e.g.,
-`cost_usd` repurposed to mean something other than USD), changing the
-error-response shape.
+## Cost budget
 
-When `v2` ships:
-- `/ask` and `/ask_batched` still return `v1` by default.
-- A header `X-Schema-Version: v2` (or `?schema_version=v2`) opts the
-  caller into the new shape.
-- Both versions are supported in parallel for at least two weeks before
-  `v1` is retired.
-- The deprecation date is announced in the ADR before removal.
+Retain the W4 soft target: average `/ask_batched` cost of no more than $0.01
+across a representative batch of 10 questions. This is a measurement target,
+not an enforced per-request limit. W5 judge costs are separate from candidate
+answer costs and should be reported separately.
 
-### Cost budget (added W4)
+## Schema versioning
 
-Capstone `/ask_batched` calls cost ≤ **$0.01 each** on average over a
-representative batch of 10 questions. This is a soft budget — the
-intent is to fail loud in observability if average cost suddenly
-doubles, not to reject individual expensive calls.
+Keep `v1` for compatible additions, including optional fields with defaults,
+and internal model or retrieval changes that preserve the response contract.
+Removing or renaming fields, changing their types or meaning, or requiring a
+previously optional field requires a new version and a documented migration.
 
-The cohort confirms or refines this number against the actual results
-of Lab Step 3 (`scripts/compare_models.py`).
+The earlier ADR proposed version negotiation through `X-Schema-Version` or a
+query parameter and a minimum two-week overlap. Preserve this as a future
+migration policy; negotiation and parallel versions are not implemented today.
+Do not describe the plain-text `/ask` stream as a versioned JSON response.
 
-### Chosen default model (added W4)
+## Validation and limitations
 
-The default `Settings.model` is **`gpt-4o-mini`** for the lab. `gpt-4o`
-is available via the same code path for harder questions or when the
-mini model's confidence is low.
+The user reported a successful `/ask_batched` request and 31 passing tests on
+2026-10-10. These checks do not establish policy accuracy or full failure coverage.
+Unexpected model or database errors may currently surface as HTTP 500.
+The API has no documented custom error envelope in this implementation.
 
-> Lab Step 4 — cohort fills in their own reasoning here, e.g.
-> "I picked `gpt-4o-mini` because the comparison run showed it answers
-> 8 of 10 questions correctly at $X total cost, which is well under
+## Alternatives and consequences
 
+Retain REST rather than introduce GraphQL: the current question-answer interface
+is small. Keep model selection within configuration rather than add separate
+cheap and quality endpoints. Preserve both streaming and complete-response
+endpoints so existing clients keep working. Streaming requires separate error
+handling, and future breaking changes will need explicit migration work.
 
-## Consequences
+## Change log
 
-**Positive**
-- Consumers can rely on `Answer.content`, `Answer.cost_usd`, and
-  `Answer.retries` from W3 forwards.
-- Internal refactors (W4 tool-calling, W6 retrieval, W13 tool-use,
-  W19 agents) ship without consumer breakage.
-- A clear bump policy means the cohort doesn't have to negotiate every
-  schema change with downstream consumers.
-
-**Negative**
-- Supporting two `schema_version`s in parallel requires the API code
-  to branch on the version header for at least two weeks per bump.
-- The `cost_usd` budget assumes the cohort runs the comparison
-  regularly enough to catch regressions.
-
-## Notes
-
-- JSON + Pydantic carries the cohort through the rest of the
-  programme. Avro/Protobuf would enforce the same versioning
-  discipline with more ceremony — not adopted for this cohort.
+- 2026-09-09: Initial API ADR for the GitLab policy assistant.
+- W4: Added confidence, sources, schema versioning, model choice, and cost budget.
+- 2026-10-10: Updated scope to Matellio. Documented the actual three endpoints,
+  six-field JSON response, database alignment, and unimplemented features.

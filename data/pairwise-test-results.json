@@ -1,0 +1,31 @@
+{
+  "prompt_v1": "data/prompt-v1.txt",
+  "prompt_v2": "data/prompt-v2.txt",
+  "judge_model": "gpt-4o",
+  "questions_compared": 1,
+  "summary": {
+    "v1": 0,
+    "v2": 1,
+    "tie": 0,
+    "ambiguous": 0
+  },
+  "position_bias_rate": 0.0,
+  "results": [
+    {
+      "golden_id": "g001",
+      "question": "How many Casual Leaves is a confirmed employee entitled to in one financial year?",
+      "ideal_answer": "A confirmed employee is entitled to 4 days of Casual Leave in one financial year, from 1 April to 31 March.",
+      "answer_v1": "A confirmed employee is typically entitled to around 12 to 15 casual leaves (CLs) in one financial year, depending on the company's leave policy. This usually allows for a certain number of days to be taken off for personal matters without prior notice. It's advisable to check your specific organization's HR policy for exact details and any variations.",
+      "answer_v2": "The number of Casual Leaves an employee is entitled to in one financial year cannot be determined without specific company policies. Policies regarding Casual Leave allocations vary by organization. It's best to consult your HR department or employee handbook for precise information.",
+      "forward": {
+        "mapped_winner": "v2",
+        "reasoning": "The second answer correctly identifies that the number of Casual Leaves can vary by company policy and advises consulting the HR department for precise information. The first answer incorrectly provides a range of 12 to 15 days, which does not match the ideal answer of 4 days and is unsupported by the ideal answer."
+      },
+      "reverse": {
+        "mapped_winner": "v2",
+        "reasoning": "The first answer correctly refuses to provide a specific number of Casual Leaves, acknowledging that it depends on company policies, which aligns with the ideal answer's context of needing specific information. The second answer incorrectly provides a range of 12 to 15 days, which is not supported by the ideal answer and introduces potentially misleading information. Therefore, the first answer is more accurate and grounded."
+      },
+      "result": "v2"
+    }
+  ]
+}
